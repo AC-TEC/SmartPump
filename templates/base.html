@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPump{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('cheapest') }}" class="nav-logo">SmartPump</a>
+            <div class="nav-links">
+                <a href="{{ url_for('cheapest') }}" class="nav-link">Search</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('reports') }}" class="nav-link">Track Spending</a>
+                    <a href="{{ url_for('logout') }}" class="nav-link">Log Out</a>
+                {% else %}
+                    <a href="{{ url_for('reports') }}" class="nav-link">Track Spending</a>
+                    <a href="{{ url_for('login') }}" class="nav-link">Log In</a>
+                    <a href="{{ url_for('signup') }}" class="nav-btn">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="content">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        document.querySelectorAll(".flash-message").forEach(function(msg) {
+            setTimeout(function() {
+                msg.style.opacity = "0";
+                msg.style.maxHeight = "0";
+                msg.style.padding = "0";
+                msg.style.marginBottom = "0";
+                msg.style.overflow = "hidden";
+                setTimeout(function() { msg.remove(); }, 500);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

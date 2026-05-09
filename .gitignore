@@ -1,0 +1,18 @@
+# Private project documentation (not for version control)
+project_docs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
