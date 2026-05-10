@@ -3,6 +3,37 @@
 {% block title %} — Search{% endblock %}
 
 {% block content %}
-<h1>Find the Cheapest Gas Near You</h1>
-<p>Search form will go here.</p>
+<div class="search-section">
+    <h1 class="search-title">Search Gas Prices</h1>
+    <p class="search-subtitle">Find the cheapest gas near you, log your fill-ups,<br>and track your weekly gas spending.</p>
+
+    <form method="POST" class="search-form">
+        <div class="search-input-wrapper">
+            <label class="search-input-label" for="search">Search prices by city, zip code, or coordinates.</label>
+            <input type="text" id="search" name="search" class="search-input" placeholder="" required>
+        </div>
+
+        <div class="search-dropdowns">
+            <div class="dropdown-group">
+                <label class="dropdown-label" for="fuel_type">Fuel Type</label>
+                <select id="fuel_type" name="fuel_type" class="dropdown">
+                    <option value="1">Regular</option>
+                    <option value="2">Midgrade</option>
+                    <option value="3">Premium</option>
+                    <option value="4">Diesel</option>
+                </select>
+            </div>
+
+            <div class="dropdown-group">
+                <label class="dropdown-label" for="payment_method">Payment Method</label>
+                <select id="payment_method" name="payment_method" class="dropdown">
+                    <option value="cash_or_credit">Cash or Credit</option>
+                    <option value="credit_only">Credit Only</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="search-btn">FIND CHEAPEST GAS</button>
+    </form>
+</div>
 {% endblock %}

@@ -74,6 +74,116 @@ body {
 }
 
 /* Flash messages */
+/* Search section */
+.search-section {
+    max-width: 500px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.search-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+}
+
+.search-subtitle {
+    color: #666666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+}
+
+.search-form {
+    text-align: left;
+}
+
+.search-input-wrapper {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.search-input-label {
+    position: absolute;
+    top: 0.6rem;
+    left: 1rem;
+    font-size: 0.75rem;
+    color: #999999;
+}
+
+.search-input {
+    width: 100%;
+    padding: 2rem 1rem 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333333;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #e63946;
+}
+
+.search-dropdowns {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dropdown-group {
+    flex: 1;
+}
+
+.dropdown-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #333333;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+.dropdown {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333333;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    cursor: pointer;
+}
+
+.dropdown:focus {
+    border-color: #e63946;
+}
+
+.search-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    background-color: #e63946; /* #c1272d */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background-color: #a82128;
+}
+
+/* Flash messages */
 .flash-message {
     background-color: #fff3cd;
     border: 1px solid #ffc107;
