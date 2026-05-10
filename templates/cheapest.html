@@ -10,25 +10,25 @@
     <form method="POST" class="search-form">
         <div class="search-input-wrapper">
             <label class="search-input-label" for="search">Search prices by city, zip code, or coordinates.</label>
-            <input type="text" id="search" name="search" class="search-input" placeholder="" required>
+            <input type="text" id="search" name="search" class="search-input" placeholder="" value="{{ search_term }}" required>
         </div>
 
         <div class="search-dropdowns">
             <div class="dropdown-group">
                 <label class="dropdown-label" for="fuel_type">Fuel Type</label>
                 <select id="fuel_type" name="fuel_type" class="dropdown">
-                    <option value="1">Regular</option>
-                    <option value="2">Midgrade</option>
-                    <option value="3">Premium</option>
-                    <option value="4">Diesel</option>
+                    <option value="1" {{ "selected" if fuel_type == "1" }}>Regular</option>
+                    <option value="2" {{ "selected" if fuel_type == "2" }}>Midgrade</option>
+                    <option value="3" {{ "selected" if fuel_type == "3" }}>Premium</option>
+                    <option value="4" {{ "selected" if fuel_type == "4" }}>Diesel</option>
                 </select>
             </div>
 
             <div class="dropdown-group">
                 <label class="dropdown-label" for="payment_method">Payment Method</label>
                 <select id="payment_method" name="payment_method" class="dropdown">
-                    <option value="cash_or_credit">Cash or Credit</option>
-                    <option value="credit_only">Credit Only</option>
+                    <option value="cash_or_credit" {{ "selected" if payment_method == "cash_or_credit" }}>Cash or Credit</option>
+                    <option value="credit_only" {{ "selected" if payment_method == "credit_only" }}>Credit Only</option>
                 </select>
             </div>
         </div>
@@ -36,4 +36,36 @@
         <button type="submit" class="search-btn">FIND CHEAPEST GAS</button>
     </form>
 </div>
+
+{% if stations %}
+<div class="results-section">
+    <h2 class="results-title">{{ fuel_name }} Gas Prices Near {{ search_term }}</h2>
+
+    {% for station in stations %}
+    <div class="station-card">
+        <div class="station-left">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Station" class="station-icon">
+            <div class="station-info">
+                <span class="station-name">{{ station.name }}</span>
+                {% if station.rating %}
+                    <span class="station-rating">Rating: {{ station.rating }} stars</span>
+                {% endif %}
+                <span class="station-address">{{ station.address }}</span>
+                <span class="station-city">{{ station.city }}, {{ station.region }}</span>
+            </div>
+        </div>
+        <div class="station-right">
+            {% if station.display_price %}
+                <span class="station-price">${{ "%.2f"|format(station.display_price) }}</span>
+                <span class="price-pill pill-{{ station.price_label|lower }}">{{ station.price_label }}</span>
+            {% else %}
+                <span class="station-price price-na">N/A</span>
+                <span class="price-pill pill-na">N/A</span>
+            {% endif %}
+            <a href="{{ url_for('fillup') }}" class="log-fillup-btn">Log Fill-Up</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock %}
