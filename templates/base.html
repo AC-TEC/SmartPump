@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartPump{% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="{{ url_for('cheapest') }}" class="nav-logo">SmartPump</a>
+            <a href="{{ url_for('cheapest') }}" class="nav-logo">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="SmartPump" class="nav-logo-img">
+                SmartPump
+            </a>
             <div class="nav-links">
                 <a href="{{ url_for('cheapest') }}" class="nav-link">Search</a>
                 {% if session.get('user_id') %}

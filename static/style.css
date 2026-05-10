@@ -32,6 +32,14 @@ body {
     font-weight: 700;
     color: #1a1a2e;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-logo-img {
+    width: 32px;
+    height: 32px;
 }
 
 .nav-links {
@@ -173,7 +181,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.05em;
     color: #ffffff;
-    background-color: #e63946; /* #c1272d */
+    background-color: #e63946; 
     border: none;
     border-radius: 8px;
     cursor: pointer;
