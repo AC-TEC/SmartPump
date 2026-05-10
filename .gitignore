@@ -1,6 +1,9 @@
 # Private project documentation (not for version control)
 project_docs/
 
+# Local-only test files (not for version control)
+test_files/
+
 # Python
 __pycache__/
 *.py[cod]
