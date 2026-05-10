@@ -3,6 +3,35 @@
 {% block title %} — Sign Up{% endblock %}
 
 {% block content %}
-<h1>Create an Account</h1>
-<p>Sign up form will go here.</p>
+<div class="auth-section">
+    <h1 class="auth-title">Sign Up</h1>
+    <p class="auth-subtitle">Create your account to track gas spending<br>and log your fill-ups.</p>
+
+    <form method="POST" class="auth-form">
+        <div class="auth-row">
+            <div class="auth-group">
+                <label class="auth-label" for="name">Name</label>
+                <input type="text" id="name" name="name" class="auth-input" placeholder="Enter your name" required>
+            </div>
+            <div class="auth-group">
+                <label class="auth-label" for="email">Email</label>
+                <input type="email" id="email" name="email" class="auth-input" placeholder="Enter your email" required>
+            </div>
+        </div>
+
+        <div class="auth-group">
+            <label class="auth-label" for="password">Password</label>
+            <input type="password" id="password" name="password" class="auth-input" placeholder="Enter your password" required>
+        </div>
+
+        <div class="auth-group">
+            <label class="auth-label" for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="auth-input" placeholder="Confirm your password" required>
+        </div>
+
+        <button type="submit" class="auth-btn">SIGN UP</button>
+    </form>
+
+    <p class="auth-footer">Already have an account? <a href="{{ url_for('login') }}" class="auth-link">Log In</a></p>
+</div>
 {% endblock %}

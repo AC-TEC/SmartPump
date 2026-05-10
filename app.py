@@ -5,6 +5,7 @@ import requests
 import mysql.connector
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # App setup
 load_dotenv()
@@ -107,11 +108,81 @@ def cheapest():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        if not name or not email or not password or not confirm_password:
+            flash("All fields are required.")
+            return redirect(url_for("signup"))
+
+        if password != confirm_password:
+            flash("Passwords do not match.")
+            return redirect(url_for("signup"))
+
+        connection = get_db()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("SELECT id FROM Users WHERE email = %s", (email,))
+        if cursor.fetchone():
+            cursor.close()
+            connection.close()
+            flash("An account with that email already exists.")
+            return redirect(url_for("signup"))
+
+        hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
+        cursor.execute(
+            "INSERT INTO Users (name, email, password_hash) VALUES (%s, %s, %s)",
+            (name, email, hashed_password)
+        )
+        user_id = cursor.lastrowid
+
+        cursor.execute(
+            "INSERT INTO UserReportSettings (user_id, weekly_report_enabled) VALUES (%s, %s)",
+            (user_id, False)
+        )
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        flash("Account created! Please log in.")
+        return redirect(url_for("login"))
+
     return render_template("signup.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+
+        if not email or not password:
+            flash("All fields are required.")
+            return redirect(url_for("login"))
+
+        connection = get_db()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM Users WHERE email = %s", (email,))
+        user = cursor.fetchone()
+        cursor.close()
+        connection.close()
+
+        if not user:
+            flash("No account found with that email.")
+            return redirect(url_for("login"))
+
+        if not check_password_hash(user["password_hash"], password):
+            flash("Incorrect password.")
+            return redirect(url_for("login"))
+
+        session["user_id"] = user["id"]
+        session["user_name"] = user["name"]
+        return redirect(url_for("cheapest"))
+
     return render_template("login.html")
 
 

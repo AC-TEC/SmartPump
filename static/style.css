@@ -180,7 +180,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.05em;
     color: #ffffff;
-    background-color: #e63946;
+    background-color: #e63946; /* keep as #e63946 */
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -223,7 +223,7 @@ body {
 .station-icon {
     width: 48px;
     height: 48px;
-    border-radius: 25%;
+    border-radius: 25%; /*keep at 25% */
     background-color: #f5f5f5;
     padding: 8px;
 }
@@ -309,6 +309,102 @@ body {
 .log-fillup-btn:hover {
     background-color: #e63946;
     color: #ffffff;
+}
+
+/* Auth pages (Sign Up & Login) */
+.auth-section {
+    max-width: 600px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.auth-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    color: #666666;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.auth-form {
+    text-align: left;
+}
+
+.auth-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0;
+}
+
+.auth-row .auth-group {
+    flex: 1;
+}
+
+.auth-group {
+    margin-bottom: 1.25rem;
+}
+
+.auth-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #333333;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333333;
+    outline: none;
+}
+
+.auth-input:focus {
+    border-color: #e63946;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    background-color: #e63946; /*keep as #e63946 */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.auth-btn:hover {
+    background-color: #a82128;
+}
+
+.auth-footer {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #666666;
+}
+
+.auth-link {
+    color: #e63946;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
 }
 
 /* Flash messages */

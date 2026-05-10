@@ -3,6 +3,24 @@
 {% block title %} — Log In{% endblock %}
 
 {% block content %}
-<h1>Log In</h1>
-<p>Login form will go here.</p>
+<div class="auth-section">
+    <h1 class="auth-title">Log In</h1>
+    <p class="auth-subtitle">Access your account to track gas spending<br>and log your fill-ups.</p>
+
+    <form method="POST" class="auth-form">
+        <div class="auth-group">
+            <label class="auth-label" for="email">Email</label>
+            <input type="email" id="email" name="email" class="auth-input" placeholder="Enter your email" required>
+        </div>
+
+        <div class="auth-group">
+            <label class="auth-label" for="password">Password</label>
+            <input type="password" id="password" name="password" class="auth-input" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="auth-btn">LOG IN</button>
+    </form>
+
+    <p class="auth-footer">Don't have an account? <a href="{{ url_for('signup') }}" class="auth-link">Sign Up</a></p>
+</div>
 {% endblock %}
