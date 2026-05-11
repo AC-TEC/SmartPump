@@ -180,7 +180,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.05em;
     color: #ffffff;
-    background-color: #e63946; /* keep as #e63946 */
+    background-color: #e63946; /* keep */
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -223,7 +223,7 @@ body {
 .station-icon {
     width: 48px;
     height: 48px;
-    border-radius: 25%; /* Keep as 25% */ 
+    border-radius: 25%; /* keep */
     background-color: #f5f5f5;
     padding: 8px;
 }
@@ -353,7 +353,7 @@ body {
 .fillup-station-icon {
     width: 48px;
     height: 48px;
-    border-radius: 25%; /* keep as 25% */
+    border-radius: 25%; /* keep */
     background-color: #f5f5f5;
     padding: 8px;
 }
@@ -393,12 +393,12 @@ body {
 }
 
 .fillup-fuel-label {
-    font-size: 1.0rem; /* Keep at 1.0rem */
+    font-size: 1.0rem; /* keep */
     color: #666666;
 }
 
 .fillup-fuel-name {
-    font-size: 1.0rem; /* Keep at 1.0rem */
+    font-size: 1.0rem; /* keep */
     font-weight: 700;
     color: #1a1a2e;
 }
@@ -488,7 +488,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.05em;
     color: #ffffff;
-    background-color: #e63946; /* Keep at #e63946 */
+    background-color: #e63946; /* keep */
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -573,7 +573,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.05em;
     color: #ffffff;
-    background-color: #e63946; /* Keep at #e63946 */
+    background-color: #e63946; /* keep */
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -598,6 +598,174 @@ body {
 
 .auth-link:hover {
     text-decoration: underline;
+}
+
+/* Reports page */
+.reports-section {
+    max-width: 600px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.reports-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+}
+
+.reports-subtitle {
+    color: #666666;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.report-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.report-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 0.75rem;
+}
+
+.report-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.report-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    color: #666666;
+    outline: none;
+}
+
+.report-date-group {
+    flex: 1;
+}
+
+.report-date-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #333333;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+.report-date-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333333;
+    outline: none;
+}
+
+.report-date-input:focus {
+    border-color: #e63946;
+}
+
+.report-send-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    background-color: #e63946; /* keep */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.report-send-btn:hover {
+    background-color: #a82128;
+}
+
+.report-toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.report-toggle-desc {
+    font-size: 0.85rem;
+    color: #666666;
+    margin-top: 0.25rem;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cccccc;
+    border-radius: 28px;
+    transition: 0.3s;
+}
+
+.toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #e63946;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(22px);
+}
+
+/* Toggle confirmation message */
+.toggle-message {
+    font-size: 0.85rem;
+    color: #2d6a4f;
+    margin-top: 0.4rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.toggle-message.visible {
+    opacity: 1;
 }
 
 /* Flash messages */

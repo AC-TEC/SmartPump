@@ -1,16 +1,21 @@
 # SmartPump — Main Flask application (routes, API calls, database logic)
 
 import os
+import csv
+import io
 import requests
+import resend
 import mysql.connector
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # App setup
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "smartpump-dev-key")
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 
 def get_db():
@@ -181,6 +186,7 @@ def login():
 
         session["user_id"] = user["id"]
         session["user_name"] = user["name"]
+        session["user_email"] = user["email"]
         return redirect(url_for("cheapest"))
 
     return render_template("login.html")
@@ -255,7 +261,113 @@ def fillup():
 
 @app.route("/reports", methods=["GET", "POST"])
 def reports():
-    return render_template("reports.html")
+    if not session.get("user_id"):
+        flash("Please log in to view reports.")
+        return redirect(url_for("login"))
+
+    connection = get_db()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(
+        "SELECT weekly_report_enabled FROM UserReportSettings WHERE user_id = %s",
+        (session["user_id"],)
+    )
+    settings = cursor.fetchone()
+    weekly_enabled = settings["weekly_report_enabled"] if settings else False
+    cursor.close()
+    connection.close()
+
+    if request.method == "POST":
+        report_type = request.form.get("report_type")
+
+        if report_type == "this_week":
+            today = datetime.utcnow()
+            monday = today - timedelta(days=today.weekday())
+            start_date = monday.strftime("%Y-%m-%d")
+            end_date = today.strftime("%Y-%m-%d")
+        elif report_type == "custom_range":
+            start_date = request.form.get("start_date", "")
+            end_date = request.form.get("end_date", "")
+            if not start_date or not end_date:
+                flash("Please select both start and end dates.")
+                return redirect(url_for("reports"))
+        else:
+            flash("Invalid report type.")
+            return redirect(url_for("reports"))
+
+        connection = get_db()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT f.fill_date, g.name AS station, g.address, ft.name AS fuel_type,
+                   f.payment_type, f.gallons, f.price_per_gallon, f.total_cost
+            FROM FillUps f
+            JOIN GasStations g ON f.station_id = g.id
+            JOIN FuelTypes ft ON f.fuel_type_id = ft.id
+            WHERE f.user_id = %s AND DATE(f.fill_date) BETWEEN %s AND %s
+            ORDER BY f.fill_date
+        """, (session["user_id"], start_date, end_date))
+        fillups = cursor.fetchall()
+        cursor.close()
+        connection.close()
+
+        output = io.StringIO()
+        writer = csv.writer(output)
+        writer.writerow(["Date", "Station", "Address", "Fuel Type", "Payment Type", "Gallons", "Price/Gal", "Total"])
+
+        for f in fillups:
+            est_date = f["fill_date"] - timedelta(hours=4)
+            writer.writerow([
+                est_date.strftime("%Y-%m-%d"),
+                f["station"],
+                f["address"],
+                f["fuel_type"],
+                f["payment_type"],
+                f["gallons"],
+                f["price_per_gallon"],
+                f["total_cost"]
+            ])
+
+        csv_content = output.getvalue()
+        output.close()
+
+        user_email = session.get("user_email", "")
+        filename = f"smartpump_report_{start_date}_to_{end_date}.csv"
+
+        try:
+            resend.Emails.send({
+                "from": "SmartPump <onboarding@resend.dev>",
+                "to": [user_email],
+                "subject": f"SmartPump — Your Gas Spending Report ({start_date} to {end_date})",
+                "html": f"<p>Hi {session.get('user_name', '')}!</p><p>Here's your fill-up report for {start_date} to {end_date}.</p><p>— SmartPump</p>",
+                "attachments": [{"filename": filename, "content": list(csv_content.encode("utf-8"))}]
+            })
+            flash("Report sent to your email!")
+        except Exception as e:
+            flash(f"Failed to send report: {str(e)}")
+
+        return redirect(url_for("reports"))
+
+    return render_template("reports.html", weekly_enabled=weekly_enabled)
+
+
+@app.route("/toggle-weekly-report", methods=["POST"])
+def toggle_weekly_report():
+    if not session.get("user_id"):
+        return jsonify({"success": False}), 401
+
+    data = request.get_json()
+    enabled = data.get("enabled", False)
+
+    connection = get_db()
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE UserReportSettings SET weekly_report_enabled = %s WHERE user_id = %s",
+        (enabled, session["user_id"])
+    )
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return jsonify({"success": True})
 
 
 if __name__ == "__main__":

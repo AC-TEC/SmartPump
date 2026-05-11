@@ -3,6 +3,71 @@
 {% block title %} — Track Spending{% endblock %}
 
 {% block content %}
-<h1>Track Your Spending</h1>
-<p>Reports page will go here.</p>
+<div class="reports-section">
+    <h1 class="reports-title">Track Your Spending</h1>
+    <p class="reports-subtitle">Find the cheapest gas near you, log your fill-ups,<br>and track your weekly gas spending.</p>
+
+    <div class="report-card">
+        <h3 class="report-card-title">Email me this week so far</h3>
+        <form method="POST" class="report-row">
+            <input type="hidden" name="report_type" value="this_week">
+            <input type="email" class="report-input" value="{{ session.get('user_email', '') }}" readonly>
+            <button type="submit" class="report-send-btn">SEND</button>
+        </form>
+    </div>
+
+    <div class="report-card">
+        <h3 class="report-card-title">Custom Date Range</h3>
+        <form method="POST" class="report-row">
+            <input type="hidden" name="report_type" value="custom_range">
+            <div class="report-date-group">
+                <label class="report-date-label" for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start_date" class="report-date-input" required>
+            </div>
+            <div class="report-date-group">
+                <label class="report-date-label" for="end_date">End Date</label>
+                <input type="date" id="end_date" name="end_date" class="report-date-input" required>
+            </div>
+            <button type="submit" class="report-send-btn">SEND</button>
+        </form>
+    </div>
+
+    <div class="report-card">
+        <div class="report-toggle-row">
+            <div>
+                <h3 class="report-card-title">Weekly Automated Reports</h3>
+                <p class="report-toggle-desc">Automatically receive a report every Monday</p>
+                <p id="toggle-message" class="toggle-message"></p>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="weekly-toggle"
+                    {{ "checked" if weekly_enabled else "" }}
+                    onchange="toggleWeekly(this.checked)">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleWeekly(enabled) {
+        fetch("{{ url_for('toggle_weekly_report') }}", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({"enabled": enabled})
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            if (data.success) {
+                var msg = enabled ? "Weekly reports turned on." : "Weekly reports turned off.";
+                var el = document.getElementById("toggle-message");
+                el.textContent = msg;
+                el.classList.add("visible");
+                setTimeout(function() {
+                    el.classList.remove("visible");
+                }, 3000);
+            }
+        });
+    }
+</script>
 {% endblock %}
