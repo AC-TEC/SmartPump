@@ -3,6 +3,112 @@
 {% block title %} — Log Fill-Up{% endblock %}
 
 {% block content %}
-<h1>Log a Fill-Up</h1>
-<p>Fill-up form will go here.</p>
+<div class="fillup-section">
+    <h1 class="fillup-title">Log Fill-Up</h1>
+    <p class="fillup-subtitle">Review your station details, choose a payment type, and log your fill-up.</p>
+
+    <div class="fillup-station-card">
+        <div class="fillup-station-left">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Station" class="fillup-station-icon">
+            <div class="fillup-station-info">
+                <span class="fillup-station-name">{{ request.args.get('name', '') }}</span>
+                {% if request.args.get('rating') and request.args.get('rating') != 'None' %}
+                    <span class="fillup-station-rating">Rating: {{ request.args.get('rating') }} stars</span>
+                {% endif %}
+                <span class="fillup-station-address">{{ request.args.get('address', '') }}</span>
+                <span class="fillup-station-city">{{ request.args.get('city', '') }}, {{ request.args.get('region', '') }}</span>
+            </div>
+        </div>
+        <div class="fillup-fuel-type">
+            <span class="fillup-fuel-label">Fuel Type</span>
+            <span class="fillup-fuel-name">{{ request.args.get('fuel_name', 'Regular') }}</span>
+        </div>
+    </div>
+
+    <form method="POST" class="fillup-form">
+        <input type="hidden" name="station_id" value="{{ request.args.get('station_id', '') }}">
+        <input type="hidden" name="name" value="{{ request.args.get('name', '') }}">
+        <input type="hidden" name="address" value="{{ request.args.get('address', '') }}">
+        <input type="hidden" name="city" value="{{ request.args.get('city', '') }}">
+        <input type="hidden" name="region" value="{{ request.args.get('region', '') }}">
+        <input type="hidden" name="zip_code" value="{{ request.args.get('zip_code', '') }}">
+        <input type="hidden" name="rating" value="{{ request.args.get('rating', '') }}">
+        <input type="hidden" name="fuel_type" value="{{ request.args.get('fuel_type', '1') }}">
+        <input type="hidden" name="price_cash" value="{{ request.args.get('price_cash', '0') }}">
+        <input type="hidden" name="price_credit" value="{{ request.args.get('price_credit', '0') }}">
+
+        <div class="payment-toggle">
+            <button type="button" class="payment-btn payment-cash" id="btn-cash"
+                data-price="{{ request.args.get('price_cash', '0') }}"
+                onclick="selectPayment('cash')">
+                <span class="payment-price">${{ "%.2f"|format(request.args.get('price_cash', '0')|float) }}</span>
+                <span class="payment-label">CASH</span>
+            </button>
+            <button type="button" class="payment-btn payment-credit" id="btn-credit"
+                data-price="{{ request.args.get('price_credit', '0') }}"
+                onclick="selectPayment('credit')">
+                <span class="payment-price">${{ "%.2f"|format(request.args.get('price_credit', '0')|float) }}</span>
+                <span class="payment-label">CREDIT</span>
+            </button>
+        </div>
+        <input type="hidden" name="payment_type" id="payment_type" value="">
+
+        <div class="fillup-group">
+            <label class="fillup-label" for="price_per_gallon">Price Per Gallon</label>
+            <input type="number" id="price_per_gallon" name="price_per_gallon" class="fillup-input"
+                step="0.001" min="0" placeholder="Select a payment type" readonly required>
+        </div>
+
+        <div class="fillup-group">
+            <label class="fillup-label" for="gallons">Gallons</label>
+            <input type="number" id="gallons" name="gallons" class="fillup-input"
+                step="0.001" min="0" placeholder="Enter gallons" required>
+        </div>
+
+        <div class="fillup-group">
+            <label class="fillup-label" for="total_cost">Total Cost</label>
+            <input type="text" id="total_cost" name="total_cost" class="fillup-input"
+                placeholder="$0.00" readonly>
+        </div>
+
+        <button type="submit" class="fillup-btn" id="submit-btn" disabled>LOG FILL-UP</button>
+    </form>
+</div>
+
+<script>
+    function selectPayment(type) {
+        var cashBtn = document.getElementById("btn-cash");
+        var creditBtn = document.getElementById("btn-credit");
+        var priceInput = document.getElementById("price_per_gallon");
+        var paymentInput = document.getElementById("payment_type");
+        var submitBtn = document.getElementById("submit-btn");
+
+        cashBtn.classList.remove("selected");
+        creditBtn.classList.remove("selected");
+
+        if (type === "cash") {
+            cashBtn.classList.add("selected");
+            priceInput.value = cashBtn.getAttribute("data-price");
+            paymentInput.value = "cash";
+        } else {
+            creditBtn.classList.add("selected");
+            priceInput.value = creditBtn.getAttribute("data-price");
+            paymentInput.value = "credit";
+        }
+
+        priceInput.readOnly = false;
+        submitBtn.disabled = false;
+        calculateTotal();
+    }
+
+    function calculateTotal() {
+        var price = parseFloat(document.getElementById("price_per_gallon").value) || 0;
+        var gallons = parseFloat(document.getElementById("gallons").value) || 0;
+        var total = (price * gallons).toFixed(2);
+        document.getElementById("total_cost").value = total > 0 ? "$" + total : "$0.00";
+    }
+
+    document.getElementById("price_per_gallon").addEventListener("input", calculateTotal);
+    document.getElementById("gallons").addEventListener("input", calculateTotal);
+</script>
 {% endblock %}

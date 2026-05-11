@@ -194,6 +194,62 @@ def logout():
 
 @app.route("/fillup", methods=["GET", "POST"])
 def fillup():
+    if not session.get("user_id"):
+        flash("Please log in to log a fill-up.")
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        api_station_id = request.form.get("station_id", "")
+        station_name = request.form.get("name", "")
+        address = request.form.get("address", "")
+        city = request.form.get("city", "")
+        region = request.form.get("region", "")
+        zip_code = request.form.get("zip_code", "")
+        rating = request.form.get("rating", "")
+        fuel_type_id = int(request.form.get("fuel_type", "1"))
+        payment_type = request.form.get("payment_type", "")
+        price_per_gallon = float(request.form.get("price_per_gallon", "0"))
+        gallons = float(request.form.get("gallons", "0"))
+        total_cost = round(price_per_gallon * gallons, 2)
+
+        if not payment_type or gallons <= 0 or price_per_gallon <= 0:
+            flash("Please fill in all fields.")
+            return redirect(request.url)
+
+        rating_value = None
+        if rating and rating != "None":
+            try:
+                rating_value = float(rating)
+            except ValueError:
+                rating_value = None
+
+        connection = get_db()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("SELECT id FROM GasStations WHERE api_station_id = %s", (api_station_id,))
+        existing_station = cursor.fetchone()
+
+        if existing_station:
+            station_db_id = existing_station["id"]
+        else:
+            cursor.execute(
+                "INSERT INTO GasStations (api_station_id, name, address, city, region, zip_code, rating) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (api_station_id, station_name, address, city, region, zip_code, rating_value)
+            )
+            station_db_id = cursor.lastrowid
+
+        cursor.execute(
+            "INSERT INTO FillUps (user_id, station_id, fuel_type_id, payment_type, gallons, price_per_gallon, total_cost) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            (session["user_id"], station_db_id, fuel_type_id, payment_type, gallons, price_per_gallon, total_cost)
+        )
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        flash("Fill-up logged successfully!")
+        return redirect(url_for("cheapest"))
+
     return render_template("fillup.html")
 
 

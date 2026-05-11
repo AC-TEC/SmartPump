@@ -62,7 +62,7 @@
                 <span class="station-price price-na">N/A</span>
                 <span class="price-pill pill-na">N/A</span>
             {% endif %}
-            <a href="{{ url_for('fillup') }}" class="log-fillup-btn">Log Fill-Up</a>
+            <a href="{{ url_for('fillup', station_id=station.id, name=station.name, address=station.address, city=station.city, region=station.region, zip_code=station.zip_code, rating=station.rating, fuel_type=fuel_type, fuel_name=fuel_name, price_cash=station.price_cash, price_credit=station.price_credit) }}" class="log-fillup-btn">Log Fill-Up</a>
         </div>
     </div>
     {% endfor %}
