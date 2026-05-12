@@ -334,7 +334,7 @@ def reports():
 
         try:
             resend.Emails.send({
-                "from": "SmartPump <onboarding@resend.dev>",
+                "from": "SmartPump <reports@smartpump.app>",
                 "to": [user_email],
                 "subject": f"SmartPump — Your Gas Spending Report ({start_date} to {end_date})",
                 "html": f"<p>Hi {session.get('user_name', '')}!</p><p>Here's your fill-up report for {start_date} to {end_date}.</p><p>— SmartPump</p>",

@@ -49,7 +49,7 @@ def send_report(user_name, user_email, csv_content, start_date, end_date):
     filename = f"smartpump_report_{start_date}_to_{end_date}.csv"
 
     resend.Emails.send({
-        "from": "SmartPump <onboarding@resend.dev>",
+        "from": "SmartPump <reports@smartpump.app>",
         "to": [user_email],
         "subject": f"SmartPump — Your Weekly Gas Spending Report ({start_date} to {end_date})",
         "html": f"<p>Hi {user_name}!</p><p>Here's your automated weekly fill-up report for {start_date} to {end_date}.</p><p>— SmartPump</p>",
