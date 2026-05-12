@@ -280,7 +280,7 @@ def reports():
         report_type = request.form.get("report_type")
 
         if report_type == "this_week":
-            today = datetime.utcnow()
+            today = datetime.utcnow() - timedelta(hours=4)
             monday = today - timedelta(days=today.weekday())
             start_date = monday.strftime("%Y-%m-%d")
             end_date = today.strftime("%Y-%m-%d")
