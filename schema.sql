@@ -1,4 +1,4 @@
--- SmartPump — Database schema (CREATE TABLE statements for all 5 tables)
+-- SmartPump — Database schema (CREATE TABLE and CREATE INDEX statements)
 
 -- Table 1: Users
 CREATE TABLE Users (
@@ -50,3 +50,7 @@ CREATE TABLE UserReportSettings (
     weekly_report_enabled BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
+
+-- Indexes for query optimization
+CREATE INDEX idx_fillups_user_id ON FillUps(user_id);
+CREATE INDEX idx_fillups_fill_date ON FillUps(fill_date);
